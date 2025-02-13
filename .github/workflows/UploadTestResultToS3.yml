@@ -37,4 +37,4 @@ jobs:
           aws-region: us-east-1
 
       - name: Upload Allure Results to S3
-        run: aws s3 sync target\site\allure-maven-plugin s3://allure-report/${{ github.run_id }}/
+        run: aws s3 sync target\site\allure-maven-plugin s3://rajesh-allure-report/${{ github.run_id }}/
