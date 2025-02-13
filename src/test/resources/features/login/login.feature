@@ -1,4 +1,4 @@
-Feature: Test Log In
+Feature: Test Login
 
   @ValidLogin
   Scenario: Validate successful login
