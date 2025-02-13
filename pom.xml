@@ -146,7 +146,7 @@
         <executions>
           <execution>
             <goals>
-              <goal>serve</goal> <!-- Just generate the report with <goal>report</goal>-->
+              <goal>report</goal> <!-- Just generate the report with <goal>report</goal>-->
             </goals>
             <phase>verify</phase>
           </execution>
