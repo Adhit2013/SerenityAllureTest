@@ -3,12 +3,12 @@ name: Upload Allure Results to S3
 on:
   push:
     branches:
-      - master  # branch name
-  workflow_dispatch: # Allows manual trigger
+      - master  # Runs on push to master
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   test-and-upload:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Runs on Windows
 
     steps:
       - name: Checkout Repository
@@ -25,16 +25,16 @@ jobs:
 
       - name: Install AWS CLI
         run: |
-          sudo apt update
-          sudo apt install awscli -y
+          Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile "AWSCLIV2.msi"
+          Start-Process msiexec.exe -ArgumentList "/i AWSCLIV2.msi /quiet /norestart" -Wait
           aws --version
 
       - name: Configure AWS Credentials
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}    # AWS access key
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} #AWS secret access key
-          aws configure set region us-east-1  # AWS region
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Upload Allure Results to S3
-        run: |
-          aws s3 cp target/site/allure-maven-plugin s3://allure-report/${{ github.run_id }}/ --recursive
+        run: aws s3 sync target\site\allure-maven-plugin s3://allure-report/${{ github.run_id }}/
